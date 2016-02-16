@@ -1,0 +1,502 @@
+SET ECHO ON
+
+REM
+REM 5. Using Single-Row Functions to Customize Output
+REM
+
+REM
+REM Note: Run setup first
+REM
+
+
+Page 210
+
+SELECT   LASTNAME
+       , INITCAP(LASTNAME) 
+FROM     ONLINE_SUBSCRIBERS
+;
+
+Page 215
+
+SELECT   SYSDATE 
+  FROM   DUAL
+;
+
+SELECT   EMPLOYEE_ID
+FROM     EMPLOYEES
+WHERE    UPPER(LAST_NAME) = 'MCGILLICUTTY'
+;
+
+Page 216
+
+SELECT   INITCAP('napoleon')
+       , INITCAP('RED O''BRIEN')
+       , INITCAP('McDonald''s')
+FROM     DUAL
+;
+
+SELECT   CONCAT('Hello, ', 'world!')
+FROM     DUAL
+;
+
+Page 217
+
+SELECT   'Hello, ' || 'world!'
+FROM     DUAL
+;
+
+SELECT   'Hello, ' || 'world!' 
+                   || ' Great to ' 
+                   || 'see you.'
+FROM     DUAL
+;
+
+SELECT   FIRST_NAME || ' ' 
+                    || LAST_NAME 
+                    || ' of ship number ' 
+                    || SHIP_ID 
+                    || '.'
+FROM     EMPLOYEES
+WHERE    LAST_NAME = 'West'
+;
+
+SELECT   RPAD('Chapter One - I Am Born',40, '.')
+FROM     DUAL
+;
+
+Page 218
+
+SELECT   RPAD(CHAPTER_TITLE || ' ',30,'.')
+         || LPAD(' ' || PAGE_NUMBER,30,'.') 
+         "Table of Contents"
+FROM     BOOK_CONTENTS
+ORDER BY PAGE_NUMBER
+;
+
+Page 219
+
+SELECT   RTRIM('Seven thousand--------', '-')
+FROM     DUAL
+;
+
+SELECT   TRIM(TRAILING '-' FROM 'Seven thousand--------')
+FROM     DUAL
+;
+
+Page 220
+
+SELECT   LENGTH('Supercalifragilisticexpialidocious')
+FROM     DUAL
+;
+
+SELECT   INSTR('Mississippi', 'is', 1, 2)
+FROM     DUAL
+;
+
+Page 221
+
+SELECT   SUBSTR('Name: MARK KENNEDY', 7)
+FROM     DUAL
+;
+
+Page 222
+
+SELECT   SOUNDEX('Worthington'), SOUNDEX('Worthen')
+FROM     DUAL
+;
+
+SELECT   EMPLOYEE_ID
+       , FIRST_NAME
+       , LAST_NAME
+FROM     EMPLOYEES
+WHERE    SOUNDEX(LAST_NAME) = SOUNDEX('Worthen')
+;
+
+Page 223
+
+SELECT   ROUND(12.355143, 2)
+       , ROUND(259.99,-1)
+FROM    DUAL
+;
+
+Page 224
+
+SELECT   TRUNC(12.355143, 2)
+       , TRUNC(259.99,-1)
+FROM     DUAL
+;
+
+SELECT   REMAINDER(9,3)
+       , REMAINDER(10,3)
+       , REMAINDER(11,3)
+FROM     DUAL
+;
+
+Page 225
+
+SELECT   MOD(9,3)
+       , MOD(10,3)
+       , MOD(11,3)
+FROM     DUAL
+;
+
+SELECT   SYSDATE 
+FROM     DUAL
+;
+
+Page 226
+
+SELECT   SYSDATE TODAY
+       , ROUND(SYSDATE,'MM') ROUNDED_MONTH
+       , ROUND(SYSDATE,'RR') ROUNDED_YEAR
+FROM     DUAL
+;
+
+Page 227
+
+SELECT   SYSDATE TODAY
+       , TRUNC(SYSDATE,'MM') TRUNCATED_MONTH
+       , TRUNC(SYSDATE,'RR') TRUNCATED_YEAR
+FROM     DUAL
+;
+
+SELECT   NEXT_DAY('31-MAY-11', 'Saturday')
+FROM     DUAL
+;
+
+SELECT   LAST_DAY('14-FEB-11')
+       , LAST_DAY('20-FEB-12')
+FROM     DUAL
+;
+
+Page 228
+
+SELECT   ADD_MONTHS('31-JAN-11', 1)
+       , ADD_MONTHS('01-NOV-11', 4)
+FROM     DUAL
+;
+
+Page 229
+
+SELECT   MONTHS_BETWEEN('12-JUN-14', '03-OCT-13')
+FROM     DUAL
+;
+
+SELECT   NUMTOYMINTERVAL(27, 'MONTH')
+FROM     DUAL
+;
+
+Page 230
+
+SELECT   NUMTODSINTERVAL(36, 'HOUR')
+FROM     DUAL
+;
+
+Page 231
+
+SELECT   NVL(NULL, 0)      FIRST_ANSWER
+       , 14+NULL-4         SECOND_ANSWER
+       , 14+NVL(NULL, 0)-4 THIRD_ANSWER
+FROM     DUAL
+;
+
+SELECT   SQ_FT + NVL(BALCONY_SQ_FT,0)
+FROM     SHIP_CABINS
+;
+
+Page 232
+
+SELECT   STATE
+       , DECODE(  STATE
+                 , 'CA', 'California'
+                 , 'IL', 'Illinois'
+                 , 'Other') AS DECODED_STATE
+FROM     ADDRESSES
+;
+
+SELECT   CASE 'option1'
+           WHEN 'option1' THEN 'found it'
+           WHEN 'option2' THEN 'did not find it'
+           END AS "Answer"
+FROM     DUAL
+;
+
+Page 233
+
+SELECT   SHIP_NAME
+       , CAPACITY
+       , CASE CAPACITY 
+           WHEN 2052 THEN 'MEDIUM' 
+           WHEN 2974 THEN 'LARGE' 
+           END AS "SIZE"
+FROM     SHIPS
+WHERE    SHIP_ID <= 4
+;
+
+SELECT   TEST_SCORE
+       , UPDATED_TEST_SCORE
+       , NULLIF(UPDATED_TEST_SCORE,TEST_SCORE) REVISION_ONLY
+FROM     SCORES
+;
+
+Page 235
+
+(Author's note:  The next statement produces an error message.  See the book for more information.)
+
+INSERT INTO CALLS 
+(  CALL_ID
+ , CALL_DATE_TZ
+)
+VALUES 
+(  1
+ , '24-MAY-12 10:15:30'
+);
+
+Page 236
+
+INSERT INTO CALLS 
+(  CALL_ID
+ , CALL_DATE_TZ
+)
+VALUES 
+(  1
+ , TO_TIMESTAMP_TZ('24-MAY-12 10:15:30', 'DD-MON-RR HH24:MI:SS') 
+);
+
+Page 237
+
+SELECT   TO_NUMBER('$17,000.23','$999,999.99')
+FROM     DUAL
+;
+
+SELECT   TO_NUMBER(  '17.000,23'
+                   , '999G999D99'
+                   , 'nls_numeric_characters='',.'' ')
+                   REFORMATTED_NUMBER
+FROM     DUAL
+;
+
+Page 239
+
+SELECT   TO_CHAR('Hello') 
+FROM     DUAL
+;
+
+Page 240
+
+SELECT   TO_CHAR(198,'$999.99') 
+FROM     DUAL
+;
+
+(Author's note:  The next few statements use SYSDATE to product the current date.  Your results will show the current date, and not the date shown in the book.  But everything else should be consistent with the book text.)
+
+SELECT   TO_CHAR(SYSDATE,'DAY, "THE" DD "OF" MONTH, RRRR')
+FROM     DUAL
+;
+
+SELECT   TO_CHAR(SYSDATE,'FMDAY, "THE" DD "OF" MONTH, RRRR')
+FROM     DUAL
+;
+
+Page 241
+
+SELECT   TO_CHAR(SYSDATE,'FMDay, "the" Dd "of" Month, RRRR')
+FROM     DUAL
+;
+
+SELECT   TO_CHAR(SYSDATE,'FMDay, "the" Ddth "of" Month, RRRR')
+FROM     DUAL
+;
+
+SELECT   TO_CHAR(SYSDATE,'HH24:MI:SS AM') 
+FROM     DUAL
+;
+
+Page 242
+
+SELECT   TO_CHAR(  SYSDATE
+                 , 'DD-MON-RRRR HH:MM:SS') 
+                "Today's Date And Time"
+FROM     DUAL
+;
+
+Page 244
+
+SELECT   TO_DATE('2009-01-31','RRRR-MM-DD')
+FROM     DUAL
+;
+
+Page 245
+
+SELECT   TO_TIMESTAMP(  '2020-JAN-01 13:34:00:093423'
+                      , 'RRRR-MON-DD HH24:MI:SS:FF') EVENT_TIME
+FROM     DUAL
+;
+
+Page 246
+
+SELECT   TO_DSINTERVAL('40 08:30:00.03225') EVENT_TIME
+FROM     DUAL
+;
+
+SELECT   TO_YMINTERVAL('04-06') EVENT_TIME
+FROM     DUAL
+;
+
+SELECT   'Chapter ' || 1 || ' . . . I am born.'
+FROM     DUAL
+;
+
+Page 247
+
+SELECT   SYSDATE
+       , ADD_MONTHS(  SYSDATE
+                    , SUBSTR('plus 3 months',6,1)) PLUS_THREE
+FROM     DUAL
+;
+
+Page 249
+
+SELECT   DBTIMEZONE
+       , SESSIONTIMEZONE
+FROM     DUAL
+;
+
+(Author's note:  If the next statement produces an error message, see the book for more information.)
+
+ALTER DATABASE 
+  SET TIME_ZONE = 'Europe/Zurich'
+;
+
+ALTER SESSION 
+  SET TIME_ZONE = 'America/Los_Angeles'
+;
+
+Page 250
+
+SELECT   OWNER
+       , TABLE_NAME
+       , COLUMN_NAME
+       , DATA_TYPE
+FROM     DBA_TAB_COLUMNS
+WHERE    DATA_TYPE LIKE '%LOCAL TIME_ZONE%'
+ORDER BY OWNER
+       , TABLE_NAME
+       , COLUMN_NAME
+;
+
+Page 252
+
+SELECT   TZABBREV
+       , TZNAME
+FROM     V$TIMEZONE_NAMES
+ORDER BY TZABBREV
+       , TZNAME
+;
+
+Page 253
+
+SELECT   DBTIMEZONE 
+FROM     DUAL
+;
+
+Page 254
+
+SELECT   SESSIONTIMEZONE 
+FROM     DUAL
+;
+
+SELECT   CURRENT_DATE
+       , CURRENT_TIMESTAMP
+FROM     DUAL
+;
+
+Page 255
+
+SELECT   LOCALTIMESTAMP(4) 
+FROM     DUAL
+;
+
+SELECT   SYSTIMESTAMP 
+FROM     DUAL
+;
+
+Page 256
+
+SELECT   TO_CHAR(
+           NEW_TIME(
+             TO_DATE(  '1983-JAN-03 14:30:56'
+                     , 'RRRR-MON-DD HH24:MI:SS')
+             , 'AST'
+             , 'HST')
+           ,'DD-MON-RR HH:MI:SS') 
+           NEW_DATE
+FROM     DUAL
+;
+
+Page 257
+
+SELECT   FROM_TZ( TIMESTAMP '2012-10-12 07:45:30', '+07:30')
+FROM     DUAL
+;
+
+Page 258
+
+SELECT   TO_TIMESTAMP_TZ(  '17-04-2013 16:45:30'
+                          ,'DD-MM-RRRR HH24:MI:SS') "Time"
+FROM     DUAL
+;
+
+SELECT   CAST('19-JAN-10 11:35:30' AS TIMESTAMP WITH LOCAL TIME ZONE) 
+            "Converted LTZ"
+FROM     DUAL
+;
+
+Page 259
+
+SELECT   CAST(TO_TIMESTAMP(  '19-JAN-10 14:35:30'
+                           , 'DD-MON-RR HH24:MI:SS')
+              AS TIMESTAMP WITH LOCAL TIME ZONE
+             ) "Converted LTZ"
+FROM     DUAL
+;
+
+SELECT   EXTRACT(MINUTE FROM TO_TIMESTAMP(   '2009-10-11 12:13:14'
+                                           , 'RRRR-MM-DD HH24:MI:SS')
+                ) "Minute"
+FROM     DUAL
+;
+
+Page 260
+
+SELECT   SYS_EXTRACT_UTC(TIMESTAMP '2012-03-25 09:55:00 -04:00') "HQ"
+FROM     DUAL
+;
+
+Page 261
+
+SELECT   DBTIMEZONE
+       , SESSIONTIMEZONE 
+FROM     DUAL
+;
+
+SELECT TO_TIMESTAMP(  '2012-MAY-24 02:00:00'
+                    , 'RRRR-MON-DD HH24:MI:SS')
+                    AT TIME ZONE DBTIMEZONE "DB Time"
+FROM    DUAL
+;
+
+Page 262
+
+SELECT FROM_TZ(
+               CAST(
+                    TO_DATE(  '1999-12-01 11:00:00'
+                            , 'RRRR-MM-DD HH:MI:SS'
+                           ) AS TIMESTAMP
+                    ), 'America/Los_Angeles'
+              ) AT LOCAL "East Coast Time"
+FROM    DUAL
+;
+
+
+REM END 
