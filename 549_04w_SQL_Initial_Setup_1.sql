@@ -1,0 +1,818 @@
+SET ECHO ON
+
+REM
+REM 4. Restricting and Sorting Data - Setup 1 of 2
+REM
+REM Setup
+REM
+
+REM
+REM CREATE TABLE ADDRESSES
+REM
+
+DROP   TABLE ADDRESSES;
+CREATE TABLE ADDRESSES
+(
+   ADDRESS_ID          NUMBER
+ , EMPLOYEE_ID         NUMBER
+ , STREET_ADDRESS      VARCHAR2(40)
+ , STREET_ADDRESS2     VARCHAR2(40)
+ , CITY                VARCHAR2(30)
+ , STATE               VARCHAR2(2)
+ , ZIP                 VARCHAR2(5)
+ , ZIP_PLUS            VARCHAR2(4)
+ , COUNTRY             VARCHAR2(20)
+ , CONTACT_EMAIL       VARCHAR2(80)
+ , CONSTRAINT          PK_ADDRESS_ID
+                       PRIMARY KEY (ADDRESS_ID)
+);
+
+REM
+REM CREATE TABLE EMPLOYEES
+REM
+
+DROP   TABLE EMPLOYEES;
+CREATE TABLE EMPLOYEES
+(  EMPLOYEE_ID         NUMBER(7)
+ , SHIP_ID             NUMBER(7)
+ , FIRST_NAME          VARCHAR2(20)
+ , LAST_NAME           VARCHAR2(30)
+ , POSITION_ID         NUMBER
+ , SSN                 VARCHAR2(11)
+ , DOB                 DATE
+ , PRIMARY_PHONE       VARCHAR2(20)
+ , CONSTRAINT          PK_EMPLOYEES 
+                       PRIMARY KEY (EMPLOYEE_ID)
+); 
+
+REM
+REM CREATE TABLE PORTS
+REM
+
+DROP   TABLE PORTS;
+CREATE TABLE PORTS
+(  PORT_ID             NUMBER
+ , PORT_NAME           VARCHAR2(20)
+ , COUNTRY             VARCHAR2(40)
+ , CAPACITY            NUMBER
+ , CONSTRAINT          PK_PORT 
+                       PRIMARY KEY (PORT_ID)
+);
+
+REM
+REM CREATE TABLE PROJECTS
+REM
+
+DROP   TABLE PROJECTS;
+CREATE TABLE PROJECTS
+(  PROJECT_ID          NUMBER
+ , SHIP_ID             NUMBER(7)
+ , PURPOSE             VARCHAR2(30)
+ , PROJECT_NAME        VARCHAR2(40)
+ , PROJECT_COST        NUMBER
+ , DAYS                NUMBER
+ , CONSTRAINT          PK_PROJECT_ID
+                       PRIMARY KEY (PROJECT_ID)
+ , CONSTRAINT          CK_PROJECT_COST 
+                       CHECK (PROJECT_COST < 1000000)
+);
+
+REM
+REM CREATE TABLE SHIP_CABINS
+REM
+
+DROP   TABLE SHIP_CABINS;
+CREATE TABLE SHIP_CABINS
+(  SHIP_CABIN_ID       NUMBER
+ , SHIP_ID             NUMBER(7)
+ , ROOM_NUMBER         VARCHAR2(5)
+ , STYLE          VARCHAR2(10)
+ , ROOM_TYPE           VARCHAR2(20)
+ , WINDOW              VARCHAR2(10)
+ , GUESTS              NUMBER(3)
+ , SQ_FT               NUMBER(6)
+ , BALCONY_SQ_FT       NUMBER(6)
+ , CONSTRAINT          PK_SHIP_CABIN_ID 
+                       PRIMARY KEY (SHIP_CABIN_ID)
+ , CONSTRAINT          CK_WINDOW 
+                       CHECK (WINDOW IN ('Ocean',
+                              'Balcony', 'None'))
+);
+
+REM
+REM CREATE TABLE WORK_HISTORY
+REM
+
+DROP   TABLE WORK_HISTORY;
+CREATE TABLE WORK_HISTORY
+(  WORK_HISTORY_ID    NUMBER
+ , EMPLOYEE_ID         NUMBER
+ , START_DATE          DATE
+ , END_DATE            DATE
+ , SHIP_ID             NUMBER(7)
+ , STATUS              VARCHAR2(10)
+ , CONSTRAINT          PK_WORK_HISTORY 
+                       PRIMARY KEY (WORK_HISTORY_ID)
+);
+
+
+REM
+REM CREATE SEQUENCE SEQ_EMPLOYEE_ID
+REM
+
+DROP   SEQUENCE SEQ_EMPLOYEE_ID;
+CREATE SEQUENCE SEQ_EMPLOYEE_ID;
+
+REM
+REM CREATE SEQUENCE SEQ_ADDRESS_ID
+REM
+
+DROP   SEQUENCE SEQ_ADDRESS_ID;
+CREATE SEQUENCE SEQ_ADDRESS_ID;
+
+REM
+REM CREATE SEQUENCE SEQ_PORT_ID
+REM
+
+DROP   SEQUENCE SEQ_PORT_ID;
+CREATE SEQUENCE SEQ_PORT_ID;
+
+REM
+REM CREATE SEQUENCE SEQ_PROJECT_ID
+REM
+
+DROP   SEQUENCE SEQ_PROJECT_ID;
+CREATE SEQUENCE SEQ_PROJECT_ID;
+
+REM
+REM CREATE SEQUENCE SEQ_SHIP_CABIN_ID
+REM
+
+DROP   SEQUENCE SEQ_SHIP_CABIN_ID;
+CREATE SEQUENCE SEQ_SHIP_CABIN_ID;
+
+REM
+REM CREATE SEQUENCE SEQ_WORK_HISTORY_ID
+REM
+
+DROP   SEQUENCE SEQ_WORK_HISTORY_ID;
+CREATE SEQUENCE SEQ_WORK_HISTORY_ID;
+
+REM
+REM INSERT INTO EMPLOYEES
+REM
+
+INSERT INTO EMPLOYEES
+(  EMPLOYEE_ID, FIRST_NAME, LAST_NAME
+ , POSITION_ID, SHIP_ID)
+VALUES
+(  SEQ_EMPLOYEE_ID.NEXTVAL
+ , 'Joe','Smith'
+ , 2, 3); 
+
+INSERT INTO EMPLOYEES
+(  EMPLOYEE_ID, FIRST_NAME, LAST_NAME
+ , POSITION_ID, SHIP_ID)
+VALUES
+(  SEQ_EMPLOYEE_ID.NEXTVAL
+ , 'Mike','West'
+ , 2, 4);
+
+INSERT INTO EMPLOYEES
+(  EMPLOYEE_ID, FIRST_NAME, LAST_NAME
+ , POSITION_ID, SHIP_ID)
+VALUES
+(  SEQ_EMPLOYEE_ID.NEXTVAL
+ , 'Alice','Lindon'
+ , 2, 3);
+
+INSERT INTO EMPLOYEES
+(  EMPLOYEE_ID, FIRST_NAME, LAST_NAME
+ , POSITION_ID, SHIP_ID)
+VALUES
+(  SEQ_EMPLOYEE_ID.NEXTVAL
+ , 'Al','Smith'
+ , 2, 1);
+INSERT INTO EMPLOYEES
+(  EMPLOYEE_ID, FIRST_NAME, LAST_NAME
+ , POSITION_ID, SHIP_ID)
+VALUES
+(  SEQ_EMPLOYEE_ID.NEXTVAL
+ , 'Trish','West'
+ , 2, 2);
+
+INSERT INTO EMPLOYEES
+(  EMPLOYEE_ID, FIRST_NAME, LAST_NAME
+ , POSITION_ID, SHIP_ID)
+VALUES
+(  SEQ_EMPLOYEE_ID.NEXTVAL
+ , 'Buffy','Worthington'
+ , 2, 1);
+
+REM
+REM INSERT INTO PROJECTS
+REM
+
+INSERT INTO PROJECTS 
+  (  PROJECT_ID , SHIP_ID, PURPOSE      , PROJECT_NAME             , PROJECT_COST, DAYS)
+VALUES                 
+  (  SEQ_PROJECT_ID.NEXTVAL
+                , 2      , 'Maintenance', 'Deck Resurfacing'       , 964000      , 10);
+
+INSERT INTO PROJECTS 
+  (  PROJECT_ID , SHIP_ID, PURPOSE      , PROJECT_NAME             , PROJECT_COST, DAYS)
+VALUES               
+  (  SEQ_PROJECT_ID.NEXTVAL
+                , 3      ,'Maintenance' , 'Lifeboat Inspection'    , 12000       , 3);
+
+INSERT INTO PROJECTS 
+  (  PROJECT_ID , SHIP_ID, PURPOSE      , PROJECT_NAME             , PROJECT_COST, DAYS)
+VALUES               
+  (  SEQ_PROJECT_ID.NEXTVAL
+                , 1      ,'Maintenance' , 'Clean Pools'            , 37000       , 5);
+
+INSERT INTO PROJECTS 
+  (  PROJECT_ID , SHIP_ID, PURPOSE      , PROJECT_NAME             , PROJECT_COST, DAYS)
+VALUES               
+  (  SEQ_PROJECT_ID.NEXTVAL
+                , 1      ,'Upgrade'     , 'Replace lobby carpeting', 137000      , 5);
+
+INSERT INTO PROJECTS 
+  (  PROJECT_ID , SHIP_ID, PURPOSE      , PROJECT_NAME             , PROJECT_COST, DAYS)
+VALUES               
+  (  SEQ_PROJECT_ID.NEXTVAL
+                , 1      ,'Maintenance' , 'Major Engine Service'   , 837000      , 15);
+
+INSERT INTO PROJECTS 
+  (  PROJECT_ID , SHIP_ID, PURPOSE      , PROJECT_NAME             , PROJECT_COST, DAYS)
+VALUES               
+  (  SEQ_PROJECT_ID.NEXTVAL
+                , 1      ,'Upgrade'     , 'Remodel Dining Room A'  , 950000      , 45);
+
+INSERT INTO PROJECTS 
+  (  PROJECT_ID , SHIP_ID, PURPOSE      , PROJECT_NAME             , PROJECT_COST, DAYS)
+VALUES               
+  (  SEQ_PROJECT_ID.NEXTVAL
+                , 1      ,'Upgrade'     , 'Remodel Dining Room B'  , 925000      , 37);
+
+INSERT INTO PROJECTS 
+  (  PROJECT_ID , SHIP_ID, PURPOSE      , PROJECT_NAME             , PROJECT_COST, DAYS)
+VALUES               
+  (  SEQ_PROJECT_ID.NEXTVAL
+                , 1      ,'Maintenance' , 'Lifeboat Inspection'    , 12000       , 3);
+
+REM
+REM INSERT INTO SHIP_CABINS
+REM
+
+INSERT INTO SHIP_CABINS
+  (  SHIP_CABIN_ID, SHIP_ID, ROOM_NUMBER, STYLE , ROOM_TYPE ,  WINDOW, GUESTS, SQ_FT, BALCONY_SQ_FT)
+VALUES               
+  (  SEQ_SHIP_CABIN_ID.NEXTVAL
+                  , 1      , 102        , 'Suite'    , 'Standard', 'Ocean',      4,   533, 139);
+
+INSERT INTO SHIP_CABINS
+  (  SHIP_CABIN_ID, SHIP_ID, ROOM_NUMBER, STYLE , ROOM_TYPE ,  WINDOW, GUESTS, SQ_FT, BALCONY_SQ_FT)
+VALUES               
+  (  SEQ_SHIP_CABIN_ID.NEXTVAL
+                  , 1      , 103        , 'Stateroom', 'Standard', 'Ocean',      2,   160, NULL);
+
+INSERT INTO SHIP_CABINS
+  (  SHIP_CABIN_ID, SHIP_ID, ROOM_NUMBER, STYLE , ROOM_TYPE ,  WINDOW, GUESTS, SQ_FT, BALCONY_SQ_FT)
+VALUES               
+  (  SEQ_SHIP_CABIN_ID.NEXTVAL
+                  , 1      , 104        , 'Suite'    , 'Standard', 'None' ,      4,   533, 139);
+
+INSERT INTO SHIP_CABINS
+  (  SHIP_CABIN_ID, SHIP_ID, ROOM_NUMBER, STYLE , ROOM_TYPE ,  WINDOW, GUESTS, SQ_FT, BALCONY_SQ_FT)
+VALUES               
+  (  SEQ_SHIP_CABIN_ID.NEXTVAL
+                  , 1      , 105        , 'Stateroom', 'Standard', 'Ocean',      3,   205, NULL);
+
+INSERT INTO SHIP_CABINS
+  (  SHIP_CABIN_ID, SHIP_ID, ROOM_NUMBER, STYLE , ROOM_TYPE ,  WINDOW, GUESTS, SQ_FT, BALCONY_SQ_FT)
+VALUES               
+  (  SEQ_SHIP_CABIN_ID.NEXTVAL
+                  , 1      , 106        , 'Suite'    , 'Standard', 'None' ,      6,   586, 193);
+  
+REM
+REM INSERT INTO WORK_HISTORY
+REM
+
+INSERT INTO WORK_HISTORY 
+  (  WORK_HISTORY_ID, EMPLOYEE_ID
+   , START_DATE, END_DATE, SHIP_ID, STATUS)
+  VALUES 
+  (  10, 3, '23-JUN-01', '09-FEB-08', 1, 'Pending');
+
+INSERT INTO WORK_HISTORY 
+  (  WORK_HISTORY_ID, EMPLOYEE_ID
+   , START_DATE, END_DATE, SHIP_ID, STATUS)
+  VALUES 
+  (  11, 4, '23-JUN-01', '05-DEC-06', 4, 'Active');
+
+INSERT INTO WORK_HISTORY 
+  (  WORK_HISTORY_ID, EMPLOYEE_ID
+   , START_DATE, END_DATE, SHIP_ID, STATUS)
+  VALUES 
+  (  12, 7, '23-JUN-01', '28-SEP-02',  3, 'Pending');
+
+REM
+REM INSERT INTO ADDRESSES
+REM
+
+INSERT INTO ADDRESSES
+  (  ADDRESS_ID
+   , EMPLOYEE_ID
+   , STREET_ADDRESS
+   , STREET_ADDRESS2
+   , CITY
+   , STATE
+   , ZIP
+   , ZIP_PLUS
+   , COUNTRY
+   , CONTACT_EMAIL)
+VALUES
+  (  SEQ_ADDRESS_ID.NEXTVAL
+   , 1
+   , '350 Oracle Parkway'
+   , NULL
+   , 'Redwood City'
+   , 'CA'
+   , '94065'
+   , NULL
+   , 'USA'
+   , NULL
+   );
+
+
+INSERT INTO ADDRESSES
+  (  ADDRESS_ID
+   , EMPLOYEE_ID
+   , STREET_ADDRESS
+   , STREET_ADDRESS2
+   , CITY
+   , STATE
+   , ZIP
+   , ZIP_PLUS
+   , COUNTRY
+   , CONTACT_EMAIL)
+VALUES
+  (  SEQ_ADDRESS_ID.NEXTVAL
+   , 2
+   , '1600 Amphitheatre Parkway'
+   , NULL
+   , 'Mountain View'
+   , 'CA'
+   , '94043'
+   , NULL
+   , 'USA'
+   , NULL
+   );
+
+INSERT INTO ADDRESSES
+  (  ADDRESS_ID
+   , EMPLOYEE_ID
+   , STREET_ADDRESS
+   , STREET_ADDRESS2
+   , CITY
+   , STATE
+   , ZIP
+   , ZIP_PLUS
+   , COUNTRY
+   , CONTACT_EMAIL)
+VALUES
+  (  SEQ_ADDRESS_ID.NEXTVAL
+   , 3
+   , '1 Dell Way'
+   , NULL
+   , 'Round Rock'
+   , 'TX'
+   , '78682'
+   , NULL
+   , 'USA'
+   , NULL
+   );
+
+INSERT INTO ADDRESSES
+  (  ADDRESS_ID
+   , EMPLOYEE_ID
+   , STREET_ADDRESS
+   , STREET_ADDRESS2
+   , CITY
+   , STATE
+   , ZIP
+   , ZIP_PLUS
+   , COUNTRY
+   , CONTACT_EMAIL)
+VALUES
+  (  SEQ_ADDRESS_ID.NEXTVAL
+   , 4
+   , '29 E Ohio St'
+   , NULL
+   , 'Chicago'
+   , 'IL'
+   , '60611'
+   , '2707'
+   , 'USA'
+   , NULL
+   );
+
+INSERT INTO ADDRESSES
+  (  ADDRESS_ID
+   , EMPLOYEE_ID
+   , STREET_ADDRESS
+   , STREET_ADDRESS2
+   , CITY
+   , STATE
+   , ZIP
+   , ZIP_PLUS
+   , COUNTRY
+   , CONTACT_EMAIL)
+VALUES
+  (  SEQ_ADDRESS_ID.NEXTVAL
+   , 5
+   , '5788 Roswell Rd NE'
+   , NULL
+   , 'Atlanta'
+   , 'GA'
+   , '30328'
+   , '4904'
+   , 'USA'
+   , NULL
+   );
+
+INSERT INTO ADDRESSES
+  (  ADDRESS_ID
+   , EMPLOYEE_ID
+   , STREET_ADDRESS
+   , STREET_ADDRESS2
+   , CITY
+   , STATE
+   , ZIP
+   , ZIP_PLUS
+   , COUNTRY
+   , CONTACT_EMAIL)
+VALUES
+  (  SEQ_ADDRESS_ID.NEXTVAL
+   , 2
+   , '10103 100 St NW'
+   , NULL
+   , 'Edmonton'
+   , 'AB'
+   , 'T5J'
+   , '0N8'
+   , 'Canada'
+   , NULL
+   );
+
+INSERT INTO ADDRESSES
+  (  ADDRESS_ID
+   , EMPLOYEE_ID
+   , STREET_ADDRESS
+   , STREET_ADDRESS2
+   , CITY
+   , STATE
+   , ZIP
+   , ZIP_PLUS
+   , COUNTRY
+   , CONTACT_EMAIL)
+VALUES
+  (  SEQ_ADDRESS_ID.NEXTVAL
+   , 6
+   , '1221 Avenue of the Americas'
+   , NULL
+   , 'New York'
+   , 'NY'
+   , '10020'
+   , NULL
+   , 'USA'
+   , NULL
+   );
+
+INSERT INTO ADDRESSES
+  (  ADDRESS_ID
+   , EMPLOYEE_ID
+   , STREET_ADDRESS
+   , STREET_ADDRESS2
+   , CITY
+   , STATE
+   , ZIP
+   , ZIP_PLUS
+   , COUNTRY
+   , CONTACT_EMAIL)
+VALUES
+  (  SEQ_ADDRESS_ID.NEXTVAL
+   , 7
+   , '239 Baker Street'
+   , NULL
+   , 'London'
+   , NULL
+   , 'NW1'
+   , '6X3'
+   , 'UK'
+   , NULL
+   );
+
+INSERT INTO ADDRESSES
+  (  ADDRESS_ID
+   , EMPLOYEE_ID
+   , STREET_ADDRESS
+   , STREET_ADDRESS2
+   , CITY
+   , STATE
+   , ZIP
+   , ZIP_PLUS
+   , COUNTRY
+   , CONTACT_EMAIL)
+VALUES
+  (  SEQ_ADDRESS_ID.NEXTVAL
+   , 7
+   , '1 rue des Carrieres'
+   , NULL
+   , 'Quebec City'
+   , 'QC'
+   , 'G1R'
+   , '4P5'
+   , 'Canada'
+   , NULL
+   );
+
+INSERT INTO ADDRESSES
+  (  ADDRESS_ID
+   , EMPLOYEE_ID
+   , STREET_ADDRESS
+   , STREET_ADDRESS2
+   , CITY
+   , STATE
+   , ZIP
+   , ZIP_PLUS
+   , COUNTRY
+   , CONTACT_EMAIL)
+VALUES
+  (  SEQ_ADDRESS_ID.NEXTVAL
+   , 4
+   , '2041 S Harbor Blvd'
+   , NULL
+   , 'Anaheim'
+   , 'CA'
+   , '92802'
+   , '3513'
+   , 'USA'
+   , NULL
+   );
+
+INSERT INTO ADDRESSES
+  (  ADDRESS_ID
+   , EMPLOYEE_ID
+   , STREET_ADDRESS
+   , STREET_ADDRESS2
+   , CITY
+   , STATE
+   , ZIP
+   , ZIP_PLUS
+   , COUNTRY
+   , CONTACT_EMAIL)
+VALUES
+  (  SEQ_ADDRESS_ID.NEXTVAL
+   , 2
+   , '600 N Michigan Ave'
+   , NULL
+   , 'Chicago'
+   , 'IL'
+   , '60611'
+   , '3113'
+   , 'USA'
+   , NULL
+   );
+
+INSERT INTO ADDRESSES
+  (  ADDRESS_ID
+   , EMPLOYEE_ID
+   , STREET_ADDRESS
+   , STREET_ADDRESS2
+   , CITY
+   , STATE
+   , ZIP
+   , ZIP_PLUS
+   , COUNTRY
+   , CONTACT_EMAIL)
+VALUES
+  (  SEQ_ADDRESS_ID.NEXTVAL
+   , 6
+   , '1515 Sheridan Rd'
+   , NULL
+   , 'Wilmette'
+   , 'IL'
+   , '60091'
+   , NULL
+   , 'USA'
+   , NULL
+   );
+
+REM
+REM INSERT INTO PORTS
+REM
+
+INSERT INTO PORTS
+(  PORT_ID, PORT_NAME, COUNTRY, CAPACITY)
+VALUES
+(  SEQ_PORT_ID.NEXTVAL
+ , 'Baltimore', 'USA', 2)
+;
+
+INSERT INTO PORTS
+(  PORT_ID, PORT_NAME, COUNTRY, CAPACITY)
+VALUES
+(  SEQ_PORT_ID.NEXTVAL
+ , 'Charleston', 'USA', 2)
+;
+
+INSERT INTO PORTS
+(  PORT_ID, PORT_NAME, COUNTRY, CAPACITY)
+VALUES
+(  SEQ_PORT_ID.NEXTVAL
+ , 'Tampa', 'USA', 8)
+;
+
+INSERT INTO PORTS
+(  PORT_ID, PORT_NAME, COUNTRY, CAPACITY)
+VALUES
+(  SEQ_PORT_ID.NEXTVAL
+ , 'Miami', 'USA', 6)
+;
+
+INSERT INTO PORTS
+(  PORT_ID, PORT_NAME, COUNTRY, CAPACITY)
+VALUES
+(  SEQ_PORT_ID.NEXTVAL
+ , 'Galveston', 'USA', 4)
+;
+
+INSERT INTO PORTS
+(  PORT_ID, PORT_NAME, COUNTRY, CAPACITY)
+VALUES
+(  SEQ_PORT_ID.NEXTVAL
+ , 'San Diego', 'USA', 4)
+;
+
+INSERT INTO PORTS
+(  PORT_ID, PORT_NAME, COUNTRY, CAPACITY)
+VALUES
+(  SEQ_PORT_ID.NEXTVAL
+ , 'San Francisco', 'USA', 3)
+;
+
+INSERT INTO PORTS
+(  PORT_ID, PORT_NAME, COUNTRY, CAPACITY)
+VALUES
+(  SEQ_PORT_ID.NEXTVAL
+ , 'Los Angeles', 'USA', 4)
+;
+
+INSERT INTO PORTS
+(  PORT_ID, PORT_NAME, COUNTRY, CAPACITY)
+VALUES
+(  SEQ_PORT_ID.NEXTVAL
+ , 'Honolulu', 'USA', 6)
+;
+
+INSERT INTO PORTS
+(  PORT_ID, PORT_NAME, COUNTRY, CAPACITY)
+VALUES
+(  SEQ_PORT_ID.NEXTVAL
+ , 'St. Thomas', 'USA', 6)
+;
+
+INSERT INTO PORTS
+(  PORT_ID, PORT_NAME, COUNTRY, CAPACITY)
+VALUES
+(  SEQ_PORT_ID.NEXTVAL
+ , 'San Juan', 'USA', 3)
+;
+
+INSERT INTO PORTS
+(  PORT_ID, PORT_NAME, COUNTRY, CAPACITY)
+VALUES
+(  SEQ_PORT_ID.NEXTVAL
+ , 'Nassau', 'Bahamas', 7)
+;
+
+INSERT INTO PORTS
+(  PORT_ID, PORT_NAME, COUNTRY, CAPACITY)
+VALUES
+(  SEQ_PORT_ID.NEXTVAL
+ , 'Grand Cayman', 'UK', 3)
+;
+
+DROP   TABLE ORDERS;
+CREATE TABLE ORDERS
+(  ORDER_ID   NUMBER
+ , ORDER_DATE DATE
+ , SUBTOTAL   NUMBER(9,2)
+ , LINE_ITEMS NUMBER);
+
+REM DROP   SEQUENCE SEQ_ORDER_ID;
+REM CREATE SEQUENCE SEQ_ORDER_ID;
+
+INSERT INTO ORDERS (
+      ORDER_ID
+    , ORDER_DATE
+    , SUBTOTAL
+    , LINE_ITEMS
+  ) VALUES (
+      101
+    , '01-FEB-12'
+    , 23
+    , 1
+  );
+
+INSERT INTO ORDERS (
+      ORDER_ID
+    , ORDER_DATE
+    , SUBTOTAL
+    , LINE_ITEMS
+  ) VALUES (
+      102
+    , '02-FEB-12'
+    , 219.93
+    , 2
+  );
+
+INSERT INTO ORDERS (
+      ORDER_ID
+    , ORDER_DATE
+    , SUBTOTAL
+    , LINE_ITEMS
+  ) VALUES (
+      103
+    , '04-FEB-12'
+    , 127
+    , 1
+  );
+
+INSERT INTO ORDERS (
+      ORDER_ID
+    , ORDER_DATE
+    , SUBTOTAL
+    , LINE_ITEMS
+  ) VALUES (
+      104
+    , '01-FEB-12'
+    , 39
+    , 2
+  );
+
+INSERT INTO ORDERS (
+      ORDER_ID
+    , ORDER_DATE
+    , SUBTOTAL
+    , LINE_ITEMS
+  ) VALUES (
+      105
+    , '18-APR-12'
+    , 914
+    , 2
+  );
+
+INSERT INTO ORDERS (
+      ORDER_ID
+    , ORDER_DATE
+    , SUBTOTAL
+    , LINE_ITEMS
+  ) VALUES (
+      106
+    , '05-JAN-13'
+    , 20
+    , 18
+  );
+
+INSERT INTO ORDERS (
+      ORDER_ID
+    , ORDER_DATE
+    , SUBTOTAL
+    , LINE_ITEMS
+  ) VALUES (
+      107
+    , '10-JAN-13'
+    , 75.3
+    , 2
+  );
+
+INSERT INTO ORDERS (
+      ORDER_ID
+    , ORDER_DATE
+    , SUBTOTAL
+    , LINE_ITEMS
+  ) VALUES (
+      108
+    , '05-JAN-13'
+    , 60
+    , 2
+  );
+
+COMMIT;
+
+REM
+REM You are ready to begin.
+REM 
